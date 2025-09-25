@@ -47,7 +47,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue';
 import { AgGridVue } from 'ag-grid-vue3';
-import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
+import { ModuleRegistry } from 'ag-grid-community';
 import { MasterDetailModule } from 'ag-grid-enterprise';
 
 import { fundData, NodeType } from '../../data/fundData';
@@ -55,7 +55,7 @@ import OperationPanel from '../OperationPanel.vue';
 import { getLevel1ColumnDefs, getLevel2ColumnDefs, getLevel3ColumnDefs, getLevel4ColumnDefs, getDefaultColDef } from './columns';
 
 // Register AG Grid modules
-ModuleRegistry.registerModules([AllCommunityModule, MasterDetailModule]);
+ModuleRegistry.registerModules([MasterDetailModule]);
 
 const gridRef = ref();
 const operationPanelRef = ref();
