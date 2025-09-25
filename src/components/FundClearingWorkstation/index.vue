@@ -211,6 +211,7 @@ const detailCellRendererParams = computed(() => ({
           gridInstances.value.add(params.api);
         },
         components: gridComponents,
+        components: gridComponents,
         onSelectionChanged: updateSelectionCounts,
         onRowDoubleClicked: onRowDoubleClicked,
         detailCellRendererParams: {
@@ -229,7 +230,6 @@ const detailCellRendererParams = computed(() => ({
             onSelectionChanged: updateSelectionCounts,
           },
           getDetailRowData: (params: any) => {
-            params.successCallback(params.data.children || []);
           },
         },
       },
