@@ -238,6 +238,7 @@ const updateOperationPanelHeight = () => {
     if (operationPanelRef.value?.$el) {
       const height = operationPanelRef.value.$el.offsetHeight;
       operationPanelHeight.value = height;
+      console.log('Operation panel height updated:', height);
     }
   });
 };
@@ -297,9 +298,21 @@ onMounted(() => {
   // 添加全局刷新监听器
   window.addEventListener('refreshAllGrids', handleRefreshAllGrids);
 
+  // 监听操作面板内容变化（如按钮换行）
+  const mutationObserver = new MutationObserver(updateOperationPanelHeight);
+  if (operationPanelRef.value?.$el) {
+    mutationObserver.observe(operationPanelRef.value.$el, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['style', 'class']
+    });
+  }
+
   return () => {
     window.removeEventListener('resize', updateOperationPanelHeight);
     resizeObserver.disconnect();
+    mutationObserver.disconnect();
     window.removeEventListener('refreshAllGrids', handleRefreshAllGrids);
   };
 });
