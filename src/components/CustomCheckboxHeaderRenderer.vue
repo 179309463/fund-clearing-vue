@@ -259,6 +259,7 @@ onUnmounted(() => {
   align-items: center;
   justify-content: center;
   min-height: 32px;
+  padding: 0;
 }
 
 .custom-checkbox {
@@ -266,5 +267,6 @@ onUnmounted(() => {
   height: 16px;
   margin: 0;
   cursor: pointer;
+  flex-shrink: 0;
 }
 </style>
