@@ -44,29 +44,60 @@ export const getLevel4ColumnDefs = (): ColDef[] => [
   {
     headerName: '指令状态',
     field: 'instructionStatus',
-    cellRenderer: StatusBadge,
-    cellRendererParams: (params: any) => ({
-      status: params.value,
-      type: 'instruction'
-    }),
+    cellRenderer: (params: any) => {
+      const status = params.value;
+      const type = 'instruction';
+      const getStatusClass = (status: string, type: string) => {
+        switch (type) {
+          case 'instruction':
+            return status === '已生成' ? 'status-success' :
+                   status === '未生成' ? 'status-warning' :
+                   'status-default';
+          default:
+            return 'status-default';
+        }
+      };
+      return `<span class="status-badge ${getStatusClass(status, type)}">${status}</span>`;
+    },
   },
   {
     headerName: '有效状态',
     field: 'validStatus',
-    cellRenderer: StatusBadge,
-    cellRendererParams: (params: any) => ({
-      status: params.value,
-      type: 'valid'
-    }),
+    cellRenderer: (params: any) => {
+      const status = params.value;
+      const type = 'valid';
+      const getStatusClass = (status: string, type: string) => {
+        switch (type) {
+          case 'valid':
+            return status === '正常' ? 'status-success' :
+                   status === '异常' ? 'status-error' :
+                   'status-default';
+          default:
+            return 'status-default';
+        }
+      };
+      return `<span class="status-badge ${getStatusClass(status, type)}">${status}</span>`;
+    },
   },
   {
     headerName: '资金结算状态',
     field: 'fundSettlementStatus',
-    cellRenderer: StatusBadge,
-    cellRendererParams: (params: any) => ({
-      status: params.value,
-      type: 'settlement'
-    }),
+    cellRenderer: (params: any) => {
+      const status = params.value;
+      const type = 'settlement';
+      const getStatusClass = (status: string, type: string) => {
+        switch (type) {
+          case 'settlement':
+            return status === '成功' ? 'status-success' :
+                   status === '失败' ? 'status-error' :
+                   status === '处理中' ? 'status-info' :
+                   'status-default';
+          default:
+            return 'status-default';
+        }
+      };
+      return `<span class="status-badge ${getStatusClass(status, type)}">${status}</span>`;
+    },
   },
   {
     headerName: '交易类型',

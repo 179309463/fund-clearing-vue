@@ -50,10 +50,21 @@ export const getLevel3ColumnDefs = (): ColDef[] => [
   {
     headerName: '划款进度',
     field: 'transferProgress',
-    cellRenderer: StatusBadge,
-    cellRendererParams: (params: any) => ({
-      status: params.value,
-      type: 'progress'
-    }),
+    cellRenderer: (params: any) => {
+      const status = params.value;
+      const type = 'progress';
+      const getStatusClass = (status: string, type: string) => {
+        switch (type) {
+          case 'progress':
+            return status === '进行中' ? 'status-info' :
+                   status === '已完成' ? 'status-success' :
+                   status === '超时' ? 'status-error' :
+                   'status-default';
+          default:
+            return 'status-default';
+        }
+      };
+      return `<span class="status-badge ${getStatusClass(status, type)}">${status}</span>`;
+    },
   },
 ];

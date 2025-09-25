@@ -44,49 +44,101 @@ export const getLevel2ColumnDefs = (): ColDef[] => [
   {
     headerName: '自动清算状态',
     field: 'autoClearingStatus',
-    cellRenderer: StatusBadge,
-    cellRendererParams: (params: any) => ({
-      status: params.value,
-      type: 'clearing'
-    }),
+    cellRenderer: (params: any) => {
+      const status = params.value;
+      const type = 'clearing';
+      const getStatusClass = (status: string, type: string) => {
+        switch (type) {
+          case 'clearing':
+            return status === '已开启' ? 'status-success' :
+                   status === '已生成' ? 'status-info' :
+                   'status-default';
+          default:
+            return 'status-default';
+        }
+      };
+      return `<span class="status-badge ${getStatusClass(status, type)}">${status}</span>`;
+    },
     minWidth: 120,
   },
   {
     headerName: '划款申请状态',
     field: 'transferApplicationStatus',
-    cellRenderer: StatusBadge,
-    cellRendererParams: (params: any) => ({
-      status: params.value,
-      type: 'application'
-    }),
+    cellRenderer: (params: any) => {
+      const status = params.value;
+      const type = 'application';
+      const getStatusClass = (status: string, type: string) => {
+        switch (type) {
+          case 'application':
+            return status === '已生成' ? 'status-success' :
+                   status === '未生成' ? 'status-warning' :
+                   'status-default';
+          default:
+            return 'status-default';
+        }
+      };
+      return `<span class="status-badge ${getStatusClass(status, type)}">${status}</span>`;
+    },
     minWidth: 120,
   },
   {
     headerName: '未办提醒',
     field: 'pendingReminder',
-    cellRenderer: StatusBadge,
-    cellRendererParams: (params: any) => ({
-      status: params.value,
-      type: 'reminder'
-    }),
+    cellRenderer: (params: any) => {
+      const status = params.value;
+      const type = 'reminder';
+      const getStatusClass = (status: string, type: string) => {
+        switch (type) {
+          case 'reminder':
+            return status === '未办' ? 'status-error' :
+                   status === '已办' ? 'status-success' :
+                   'status-default';
+          default:
+            return 'status-default';
+        }
+      };
+      return `<span class="status-badge ${getStatusClass(status, type)}">${status}</span>`;
+    },
   },
   {
     headerName: '核算进度',
     field: 'accountingProgress',
-    cellRenderer: StatusBadge,
-    cellRendererParams: (params: any) => ({
-      status: params.value,
-      type: 'progress'
-    }),
+    cellRenderer: (params: any) => {
+      const status = params.value;
+      const type = 'progress';
+      const getStatusClass = (status: string, type: string) => {
+        switch (type) {
+          case 'progress':
+            return status === '进行中' ? 'status-info' :
+                   status === '已完成' ? 'status-success' :
+                   status === '超时' ? 'status-error' :
+                   'status-default';
+          default:
+            return 'status-default';
+        }
+      };
+      return `<span class="status-badge ${getStatusClass(status, type)}">${status}</span>`;
+    },
   },
   {
     headerName: '托管行进度',
     field: 'custodyProgress',
-    cellRenderer: StatusBadge,
-    cellRendererParams: (params: any) => ({
-      status: params.value,
-      type: 'progress'
-    }),
+    cellRenderer: (params: any) => {
+      const status = params.value;
+      const type = 'progress';
+      const getStatusClass = (status: string, type: string) => {
+        switch (type) {
+          case 'progress':
+            return status === '进行中' ? 'status-info' :
+                   status === '已完成' ? 'status-success' :
+                   status === '超时' ? 'status-error' :
+                   'status-default';
+          default:
+            return 'status-default';
+        }
+      };
+      return `<span class="status-badge ${getStatusClass(status, type)}">${status}</span>`;
+    },
   },
   {
     headerName: '账户余额',
