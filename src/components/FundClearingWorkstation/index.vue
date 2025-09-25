@@ -8,7 +8,7 @@
 
     <!-- Main Content -->
     <div class="main-content">
-      <div class="grid-container" :style="{ paddingBottom: operationPanelHeight + 'px' }">
+      <div class="grid-container" :style="{ paddingBottom: `${operationPanelHeight}px` }">
         <div class="ag-theme-balham grid-wrapper">
           <AgGridVue
             ref="gridRef"
@@ -45,7 +45,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted, nextTick, watch } from 'vue';
+import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue';
 import { AgGridVue } from 'ag-grid-vue3';
 import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
 import { MasterDetailModule } from 'ag-grid-enterprise';
@@ -59,7 +59,7 @@ ModuleRegistry.registerModules([AllCommunityModule, MasterDetailModule]);
 
 const gridRef = ref();
 const operationPanelRef = ref();
-const operationPanelHeight = ref(140);
+const operationPanelHeight = ref(160);
 const selectedCount = ref(0);
 const totalCount = ref(0);
 const tradeOrderSelectedCount = ref(0);
@@ -237,18 +237,7 @@ const updateOperationPanelHeight = () => {
   nextTick(() => {
     if (operationPanelRef.value?.$el) {
       const height = operationPanelRef.value.$el.offsetHeight;
-      const newHeight = Math.max(height, 140); // 最小高度140px
-      if (newHeight !== operationPanelHeight.value) {
-        operationPanelHeight.value = newHeight;
-        console.log('Operation panel height updated:', newHeight);
-        
-        // 强制重新计算表格高度
-        if (gridRef.value?.api) {
-          setTimeout(() => {
-            gridRef.value.api.sizeColumnsToFit();
-          }, 100);
-        }
-      }
+      operationPanelHeight.value = height;
     }
   });
 };
@@ -308,21 +297,9 @@ onMounted(() => {
   // 添加全局刷新监听器
   window.addEventListener('refreshAllGrids', handleRefreshAllGrids);
 
-  // 监听操作面板内容变化（如按钮换行）
-  const mutationObserver = new MutationObserver(updateOperationPanelHeight);
-  if (operationPanelRef.value?.$el) {
-    mutationObserver.observe(operationPanelRef.value.$el, {
-      childList: true,
-      subtree: true,
-      attributes: true,
-      attributeFilter: ['style', 'class']
-    });
-  }
-
   return () => {
     window.removeEventListener('resize', updateOperationPanelHeight);
     resizeObserver.disconnect();
-    mutationObserver.disconnect();
     window.removeEventListener('refreshAllGrids', handleRefreshAllGrids);
   };
 });
@@ -364,24 +341,18 @@ onUnmounted(() => {
 .main-content {
   flex: 1;
   overflow: hidden;
-  display: flex;
-  flex-direction: column;
 }
 
 .grid-container {
   background-color: white;
-  flex: 1;
-  min-height: 0;
+  height: 100%;
 }
 
 .grid-wrapper {
   height: 100%;
-  width: 100%;
 }
 
 .grid {
   height: 100%;
-  width: 100%;
-  min-height: 0;
 }
 </style>

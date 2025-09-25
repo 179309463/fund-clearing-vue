@@ -47,7 +47,6 @@
 
 <script setup lang="ts">
 import { CheckSquareOutlined, BorderOutlined } from '@ant-design/icons-vue';
-import { nextTick, watch } from 'vue';
 
 interface StatusFilters {
   bondDistribution: boolean;
@@ -78,14 +77,6 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const emit = defineEmits<Emits>();
-
-// 监听状态过滤器变化，触发高度重新计算
-watch(() => props.statusFilters, () => {
-  nextTick(() => {
-    // 触发父组件重新计算高度
-    window.dispatchEvent(new Event('resize'));
-  });
-}, { deep: true });
 
 const handleStatusFilterChange = (key: keyof StatusFilters) => {
   const newFilters = {
@@ -207,7 +198,6 @@ const operationButtons = [
   display: flex;
   align-items: center;
   gap: 12px;
-  flex-wrap: wrap;
 }
 
 .operation-btn {
