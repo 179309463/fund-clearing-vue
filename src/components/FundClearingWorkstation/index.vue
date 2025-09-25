@@ -199,6 +199,7 @@ const detailCellRendererParams = computed(() => ({
         suppressCellFocus: true,
         groupDefaultExpanded: -1,
         onGridReady: (params: any) => {
+          console.log('Sub-grid ready, adding to instances:', params.api);
           gridInstances.value.add(params.api);
         },
         onSelectionChanged: updateSelectionCounts,

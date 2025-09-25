@@ -126,9 +126,16 @@ const handleHeaderCheckboxChange = (event: Event) => {
   const target = event.target as HTMLInputElement;
   const isChecked = target.checked;
 
-  // 判断当前是否为半选状态
-  const currentState = calculateGlobalSelectionState();
+  // 判断当前是否为半选状态 - 使用组件当前状态而不是重新计算
+  const currentState = checkboxState.value;
   const isFromIndeterminate = currentState === 'some';
+
+  console.log('Header checkbox change:', {
+    isChecked,
+    isFromIndeterminate,
+    currentState,
+    componentState: checkboxState.value
+  });
 
   // 递归更新所有层级的选择状态，使用与CustomCheckboxRenderer相同的逻辑
   const cascadeSelection = (items: any[], selected: boolean, isFromIndeterminate: boolean = false) => {
