@@ -7,7 +7,7 @@
     </div>
 
     <!-- Main Content -->
-    <div class="main-content">
+    <div class="main-content" :style="{ paddingBottom: operationPanelHeight + 'px' }">
       <div class="grid-container">
         <div class="ag-theme-balham grid-wrapper">
           <AgGridVue
@@ -364,28 +364,27 @@ onUnmounted(() => {
 .main-content {
   flex: 1;
   overflow: hidden;
-  position: relative;
+  display: flex;
+  flex-direction: column;
 }
 
 .grid-container {
   background-color: white;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: v-bind(operationPanelHeight + 'px');
-  overflow: hidden;
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
 }
 
 .grid-wrapper {
   height: 100%;
   width: 100%;
+  min-height: 0;
   position: relative;
 }
 
 .grid {
   height: 100%;
   width: 100%;
+  min-height: 0;
 }
 </style>
