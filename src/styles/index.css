@@ -1,0 +1,144 @@
+/* 移除所有AG Grid表格的圆角 */
+.ag-theme-balham {
+  border-radius: 0 !important;
+}
+
+.ag-theme-balham .ag-root-wrapper {
+  border-radius: 0 !important;
+}
+
+.ag-theme-balham .ag-root {
+  border-radius: 0 !important;
+}
+
+.ag-theme-balham .ag-header {
+  border-radius: 0 !important;
+}
+
+.ag-theme-balham .ag-header-row {
+  border-radius: 0 !important;
+}
+
+.ag-theme-balham .ag-row {
+  border-radius: 0 !important;
+}
+
+.ag-theme-balham .ag-details-grid {
+  border-radius: 0 !important;
+}
+
+.ag-theme-balham .ag-details-grid .ag-root-wrapper {
+  border-radius: 0 !important;
+}
+
+.ag-theme-balham .ag-details-grid .ag-root {
+  border-radius: 0 !important;
+}
+
+.ag-theme-balham * {
+  border-radius: 0 !important;
+}
+
+/* 调整第一层表格边框粗细 */
+.ag-theme-balham>.ag-root-wrapper {
+  border-width: 1px !important;
+}
+
+.ag-theme-balham>.ag-root-wrapper>.ag-root {
+  border-width: 1px !important;
+}
+
+.ag-theme-balham .ag-header {
+  border-bottom-width: 1px !important;
+}
+
+.ag-theme-balham .ag-row {
+  border-bottom-width: 1px !important;
+}
+
+.ag-theme-balham .ag-cell {
+  border-right-width: 1px !important;
+}
+
+/* 调整第一层展开详情的padding */
+.ag-theme-balham .ag-details-row-auto-height.ag-details-row {
+  padding: 12px 0px 12px 30px !important;
+}
+
+/* 调整第二层和第三层展开详情的padding */
+.ag-theme-balham .ag-details-grid .ag-details-row-auto-height.ag-details-row {
+  padding: 12px 0px 12px 30px !important;
+}
+
+/* 调整嵌套更深层级的展开详情的padding */
+.ag-theme-balham .ag-details-grid .ag-details-grid .ag-details-row-auto-height.ag-details-row {
+  padding: 12px 0px 12px 30px !important;
+}
+
+/* 修正第2层表格展开列的padding */
+.ag-theme-balham .ag-details-grid .ag-cell[col-id="expand"] {
+  padding-left: 0 !important;
+}
+
+/* 移除复选框的outline效果 */
+.ag-theme-balham .ag-cell[col-id="selected"] {
+  outline: none !important;
+}
+
+.ag-theme-balham .ag-cell[col-id="selected"]:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.ag-theme-balham .ag-cell[col-id="selected"] input[type="checkbox"] {
+  outline: none !important;
+}
+
+.ag-theme-balham .ag-cell[col-id="selected"] input[type="checkbox"]:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* 自定义复选框表头样式 */
+.custom-checkbox-header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+}
+
+.custom-checkbox-header .ag-header-cell-text {
+  display: none;
+}
+
+/* 确保复选框在表头中居中 */
+.ag-header-cell.custom-checkbox-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ag-header-cell.custom-checkbox-header .ag-header-cell-comp-wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 全局样式重置 */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#app {
+  height: 100vh;
+}
