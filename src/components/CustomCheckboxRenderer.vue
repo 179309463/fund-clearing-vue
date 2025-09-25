@@ -170,10 +170,13 @@ const handleChange = (event: Event) => {
 
   console.log('=== CustomCheckboxRenderer handleChange ===');
   console.log('Node data:', props.data);
+  console.log('Node data ID:', props.data?.id);
   console.log('Node type:', props.data?.nodeType);
   console.log('New value:', newValue);
   console.log('Current selected state:', props.data?.selected);
   console.log('API available:', !!props.api);
+  console.log('Props keys:', Object.keys(props));
+  console.log('All props:', props);
 
   if (props.data) {
     // 设置当前节点的状态

@@ -18,6 +18,7 @@
             :masterDetail="true"
             :detailRowAutoHeight="true"
             :detailCellRendererParams="detailCellRendererParams"
+            :components="gridComponents"
             @grid-ready="onGridReady"
             @selection-changed="onSelectionChanged"
             @row-double-clicked="onRowDoubleClicked"
@@ -53,9 +54,17 @@ import { MasterDetailModule } from 'ag-grid-enterprise';
 import { fundData, NodeType } from '../../data/fundData';
 import OperationPanel from '../OperationPanel.vue';
 import { getLevel1ColumnDefs, getLevel2ColumnDefs, getLevel3ColumnDefs, getLevel4ColumnDefs, getDefaultColDef } from './columns';
+import CustomCheckboxRenderer from '../CustomCheckboxRenderer.vue';
+import CustomCheckboxHeaderRenderer from '../CustomCheckboxHeaderRenderer.vue';
 
 // Register AG Grid modules
 ModuleRegistry.registerModules([AllCommunityModule, MasterDetailModule]);
+
+// 注册自定义组件
+const gridComponents = {
+  CustomCheckboxRenderer,
+  CustomCheckboxHeaderRenderer,
+};
 
 const gridRef = ref();
 const operationPanelRef = ref();
@@ -201,6 +210,7 @@ const detailCellRendererParams = computed(() => ({
         onGridReady: (params: any) => {
           gridInstances.value.add(params.api);
         },
+        components: gridComponents,
         onSelectionChanged: updateSelectionCounts,
         onRowDoubleClicked: onRowDoubleClicked,
         detailCellRendererParams: {
@@ -215,6 +225,7 @@ const detailCellRendererParams = computed(() => ({
             onGridReady: (params: any) => {
               gridInstances.value.add(params.api);
             },
+            components: gridComponents,
             onSelectionChanged: updateSelectionCounts,
           },
           getDetailRowData: (params: any) => {
@@ -229,6 +240,7 @@ const detailCellRendererParams = computed(() => ({
   },
   getDetailRowData: (params: any) => {
     params.successCallback(params.data.children || []);
+                components: gridComponents,
   },
 }));
 
