@@ -12,19 +12,19 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, nextTick, getCurrentInstance } from 'vue';
+import { ref, onMounted, onUnmounted, nextTick, getCurrentInstance, type Ref } from 'vue';
 import { fundData, NodeType } from '../data/fundData';
 
 // 在 Vue 3 的 AG Grid 中，参数通过 getCurrentInstance 获取
 const instance = getCurrentInstance();
-const props = instance?.props as any;
+const props = (instance?.props || {}) as any;
 
 // 获取 API 的安全方法
 const getApi = () => {
   return props?.api || props?.params?.api;
 };
 
-const checkboxRef = ref<HTMLInputElement | null>(null);
+const checkboxRef: Ref<HTMLInputElement | null> = ref(null);
 const checkboxState = ref<'none' | 'some' | 'all'>('none');
 
 const setCheckboxRef = (el: HTMLInputElement | null) => {

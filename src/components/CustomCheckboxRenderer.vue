@@ -11,12 +11,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, nextTick, watch, onMounted, onUnmounted, getCurrentInstance } from 'vue';
+import { ref, computed, nextTick, watch, onMounted, onUnmounted, getCurrentInstance, type Ref } from 'vue';
 import { NodeType } from '../data/fundData';
 
 // 在 Vue 3 的 AG Grid 中，参数通过 getCurrentInstance 获取
 const instance = getCurrentInstance();
-const props = instance?.props as any;
+const props = (instance?.props || {}) as any;
 
 // 获取实际的数据
 const getData = () => {
@@ -29,7 +29,7 @@ const getApi = () => {
 
 // 添加一个响应式状态来强制重新渲染
 const forceUpdateKey = ref(0);
-const checkboxRef = ref<HTMLInputElement | null>(null);
+const checkboxRef: Ref<HTMLInputElement | null> = ref(null);
 
 const setCheckboxRef = (el: HTMLInputElement | null) => {
   checkboxRef.value = el;
