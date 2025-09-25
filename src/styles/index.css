@@ -148,6 +148,12 @@
   justify-content: center;
 }
 
+/* 确保表头复选框大小一致 */
+.ag-header-cell.custom-checkbox-header .custom-checkbox {
+  width: 16px !important;
+  height: 16px !important;
+}
+
 /* 全局样式重置 */
 * {
   box-sizing: border-box;

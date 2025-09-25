@@ -263,8 +263,8 @@ onUnmounted(() => {
 }
 
 .custom-checkbox {
-  width: 16px;
-  height: 16px;
+  width: 16px !important;
+  height: 16px !important;
   margin: 0;
   cursor: pointer;
   flex-shrink: 0;
