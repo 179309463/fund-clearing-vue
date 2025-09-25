@@ -8,7 +8,7 @@
 
     <!-- Main Content -->
     <div class="main-content">
-      <div class="grid-container" :style="{ paddingBottom: `${operationPanelHeight}px` }">
+      <div class="grid-container">
         <div class="ag-theme-balham grid-wrapper">
           <AgGridVue
             ref="gridRef"
@@ -45,7 +45,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue';
+import { ref, computed, onMounted, onUnmounted, nextTick, watch } from 'vue';
 import { AgGridVue } from 'ag-grid-vue3';
 import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
 import { MasterDetailModule } from 'ag-grid-enterprise';
@@ -59,7 +59,7 @@ ModuleRegistry.registerModules([AllCommunityModule, MasterDetailModule]);
 
 const gridRef = ref();
 const operationPanelRef = ref();
-const operationPanelHeight = ref(160);
+const operationPanelHeight = ref(140);
 const selectedCount = ref(0);
 const totalCount = ref(0);
 const tradeOrderSelectedCount = ref(0);
@@ -237,8 +237,18 @@ const updateOperationPanelHeight = () => {
   nextTick(() => {
     if (operationPanelRef.value?.$el) {
       const height = operationPanelRef.value.$el.offsetHeight;
-      operationPanelHeight.value = height;
-      console.log('Operation panel height updated:', height);
+      const newHeight = Math.max(height, 140); // 最小高度140px
+      if (newHeight !== operationPanelHeight.value) {
+        operationPanelHeight.value = newHeight;
+        console.log('Operation panel height updated:', newHeight);
+        
+        // 强制重新计算表格高度
+        if (gridRef.value?.api) {
+          setTimeout(() => {
+            gridRef.value.api.sizeColumnsToFit();
+          }, 100);
+        }
+      }
     }
   });
 };
@@ -354,11 +364,17 @@ onUnmounted(() => {
 .main-content {
   flex: 1;
   overflow: hidden;
+  position: relative;
 }
 
 .grid-container {
   background-color: white;
   height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: v-bind(operationPanelHeight + 'px');
 }
 
 .grid-wrapper {
