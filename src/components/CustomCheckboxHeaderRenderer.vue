@@ -181,11 +181,8 @@ const handleHeaderCheckboxChange = (event: Event) => {
     window.dispatchEvent(event);
 
     // 触发选择变化事件
-    if (props.api && typeof props.api.dispatchEvent === 'function') {
+    if (props.api && props.api.dispatchEvent) {
       props.api.dispatchEvent({ type: 'selectionChanged' });
-      console.log('Header selection changed event dispatched');
-    } else {
-      console.warn('Header: API dispatchEvent not available');
     }
   }, 10);
 };
@@ -206,16 +203,8 @@ const onGlobalRefresh = () => {
 };
 
 onMounted(() => {
-  console.log('CustomCheckboxHeaderRenderer mounted, API:', !!props.api);
-  
-  if (props.api && typeof props.api.addEventListener === 'function') {
-    props.api.addEventListener('selectionChanged', onSelectionChanged);
-    props.api.addEventListener('modelUpdated', onModelUpdated);
-    console.log('Header event listeners added successfully');
-  } else {
-    console.warn('CustomCheckboxHeaderRenderer: API not available or addEventListener not a function:', props.api);
-  }
-  
+  props.api.addEventListener('selectionChanged', onSelectionChanged);
+  props.api.addEventListener('modelUpdated', onModelUpdated);
   window.addEventListener('refreshAllGrids', onGlobalRefresh);
 
   // 初始化状态
@@ -223,16 +212,8 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-  console.log('CustomCheckboxHeaderRenderer unmounted');
-  
-  if (props.api && typeof props.api.removeEventListener === 'function') {
-    props.api.removeEventListener('selectionChanged', onSelectionChanged);
-    props.api.removeEventListener('modelUpdated', onModelUpdated);
-    console.log('Header event listeners removed successfully');
-  } else {
-    console.warn('CustomCheckboxHeaderRenderer: API not available for cleanup:', props.api);
-  }
-  
+  props.api.removeEventListener('selectionChanged', onSelectionChanged);
+  props.api.removeEventListener('modelUpdated', onModelUpdated);
   window.removeEventListener('refreshAllGrids', onGlobalRefresh);
 });
 </script>

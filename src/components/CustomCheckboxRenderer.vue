@@ -170,13 +170,9 @@ const handleChange = (event: Event) => {
 
   console.log('=== CustomCheckboxRenderer handleChange ===');
   console.log('Node data:', props.data);
-  console.log('Node data ID:', props.data?.id);
   console.log('Node type:', props.data?.nodeType);
   console.log('New value:', newValue);
   console.log('Current selected state:', props.data?.selected);
-  console.log('API available:', !!props.api);
-  console.log('Props keys:', Object.keys(props));
-  console.log('All props:', props);
 
   if (props.data) {
     // 设置当前节点的状态
@@ -206,14 +202,12 @@ const handleChange = (event: Event) => {
     console.log('Force update triggered');
 
     // 只刷新复选框列，不重绘整行
-    if (props.api && typeof props.api.refreshCells === 'function') {
+    if (props.api && props.api.refreshCells) {
       props.api.refreshCells({
         columns: ['selected'],
         force: true
       });
       console.log('RefreshCells called');
-    } else {
-      console.warn('API not available or refreshCells not a function:', props.api);
     }
 
     // 延迟刷新以确保数据传播到子网格
@@ -227,11 +221,9 @@ const handleChange = (event: Event) => {
       forceUpdate();
 
       // 触发选择变化事件
-      if (props.api && typeof props.api.dispatchEvent === 'function') {
+      if (props.api && props.api.dispatchEvent) {
         props.api.dispatchEvent({ type: 'selectionChanged' });
         console.log('Selection changed event dispatched');
-      } else {
-        console.warn('API dispatchEvent not available');
       }
     }, 50);
   }
@@ -268,13 +260,11 @@ watch(() => checkboxState.value.indeterminate, (newVal) => {
 }, { immediate: true });
 
 onMounted(() => {
-  console.log('CustomCheckboxRenderer mounted, data:', props.data?.id, 'API:', !!props.api);
   // 监听全局刷新事件
   window.addEventListener('refreshAllGrids', handleGlobalRefresh);
 });
 
 onUnmounted(() => {
-  console.log('CustomCheckboxRenderer unmounted, data:', props.data?.id);
   window.removeEventListener('refreshAllGrids', handleGlobalRefresh);
 });
 </script>
