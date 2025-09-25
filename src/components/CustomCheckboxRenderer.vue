@@ -13,10 +13,21 @@
 <script setup lang="ts">
 import { ref, computed, nextTick, watch, onMounted, onUnmounted } from 'vue';
 import { NodeType } from '../data/fundData';
-import type { ICellRendererParams } from 'ag-grid-community';
 
-// AG Grid 会通过 params 传递所有参数
-const props = defineProps<ICellRendererParams>();
+// 在 Vue 3 的 AG Grid 中，需要手动定义 props
+const props = defineProps<{
+  data?: any;
+  value?: any;
+  api?: any;
+  node?: any;
+  colDef?: any;
+  column?: any;
+  rowIndex?: number;
+  getValue?: () => any;
+  setValue?: (value: any) => void;
+  formatValue?: (value: any) => any;
+  params?: any;
+}>();
 
 // 添加一个响应式状态来强制重新渲染
 const forceUpdateKey = ref(0);
@@ -168,7 +179,9 @@ const handleChange = (event: Event) => {
   const newValue = target.checked;
   
   console.log('Checkbox change triggered:', {
-    nodeType: props.data?.nodeType,
+    nodeType: props.data?.nodeType || 'undefined',
+    dataExists: !!props.data,
+    propsKeys: Object.keys(props),
     newValue,
     hasChildren: !!props.data?.children?.length
   });
