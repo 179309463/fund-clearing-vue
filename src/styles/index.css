@@ -83,6 +83,10 @@
 /* 移除复选框的outline效果 */
 .ag-theme-balham .ag-cell[col-id="selected"] {
   outline: none !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
 }
 
 .ag-theme-balham .ag-cell[col-id="selected"]:focus {
@@ -97,6 +101,24 @@
 .ag-theme-balham .ag-cell[col-id="selected"] input[type="checkbox"]:focus {
   outline: none !important;
   box-shadow: none !important;
+}
+
+/* 确保复选框容器完全填充单元格 */
+.ag-theme-balham .ag-cell[col-id="selected"] .checkbox-container {
+  width: 100% !important;
+  height: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 32px !important;
+}
+
+/* 复选框本身的样式 */
+.ag-theme-balham .ag-cell[col-id="selected"] .custom-checkbox {
+  width: 16px !important;
+  height: 16px !important;
+  margin: 0 !important;
+  cursor: pointer !important;
 }
 
 /* 自定义复选框表头样式 */
