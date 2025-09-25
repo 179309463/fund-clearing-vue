@@ -230,7 +230,6 @@ const detailCellRendererParams = computed(() => ({
             onSelectionChanged: updateSelectionCounts,
           },
           getDetailRowData: (params: any) => {
-          },
         },
       },
       getDetailRowData: (params: any) => {
