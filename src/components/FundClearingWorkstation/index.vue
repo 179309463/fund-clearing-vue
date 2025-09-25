@@ -147,7 +147,7 @@ const updateSelectionCounts = () => {
         // 如果是成交单节点，同时计入成交单统计
         if (item.nodeType === NodeType.TRADE_ORDER) {
           tradeOrderSelected++;
-        }
+        },
       }
       if (item.children) {
         countSelected(item.children);
