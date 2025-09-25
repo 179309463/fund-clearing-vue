@@ -12,12 +12,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, nextTick } from 'vue';
+import { ref, onMounted, onUnmounted, nextTick, getCurrentInstance } from 'vue';
 import { fundData, NodeType } from '../data/fundData';
-import type { IHeaderParams } from 'ag-grid-community';
 
-// AG Grid 会通过 params 传递所有参数
-const props = defineProps<IHeaderParams>();
+// 在 Vue 3 的 AG Grid 中，参数通过 getCurrentInstance 获取
+const instance = getCurrentInstance();
+const props = instance?.props as any;
+
+// 获取 API 的安全方法
+const getApi = () => {
+  return props?.api || props?.params?.api;
+};
 
 const checkboxRef = ref<HTMLInputElement | null>(null);
 const checkboxState = ref<'none' | 'some' | 'all'>('none');
@@ -169,6 +174,13 @@ const handleHeaderCheckboxChange = (event: Event) => {
   // 更新fundData中的所有数据
   cascadeSelection(fundData, isChecked, isFromIndeterminate);
 
+  console.log('Header checkbox change:', {
+    isChecked,
+    isFromIndeterminate,
+    currentState,
+    newState: calculateGlobalSelectionState()
+  });
+
   // 立即更新状态
   updateSelectionState();
 
@@ -178,8 +190,9 @@ const handleHeaderCheckboxChange = (event: Event) => {
     window.dispatchEvent(event);
 
     // 触发选择变化事件
-    if (props.api) {
-      props.api.dispatchEvent({ type: 'selectionChanged' });
+    const api = getApi();
+    if (api && typeof api.dispatchEvent === 'function') {
+      api.dispatchEvent({ type: 'selectionChanged' });
     }
   }, 10);
 };
@@ -200,10 +213,10 @@ const onGlobalRefresh = () => {
 };
 
 onMounted(() => {
-  // 检查 api 是否存在
-  if (props.api) {
-    props.api.addEventListener('selectionChanged', onSelectionChanged);
-    props.api.addEventListener('modelUpdated', onModelUpdated);
+  const api = getApi();
+  if (api && typeof api.addEventListener === 'function') {
+    api.addEventListener('selectionChanged', onSelectionChanged);
+    api.addEventListener('modelUpdated', onModelUpdated);
   }
   window.addEventListener('refreshAllGrids', onGlobalRefresh);
 
@@ -212,9 +225,10 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-  if (props.api) {
-    props.api.removeEventListener('selectionChanged', onSelectionChanged);
-    props.api.removeEventListener('modelUpdated', onModelUpdated);
+  const api = getApi();
+  if (api && typeof api.removeEventListener === 'function') {
+    api.removeEventListener('selectionChanged', onSelectionChanged);
+    api.removeEventListener('modelUpdated', onModelUpdated);
   }
   window.removeEventListener('refreshAllGrids', onGlobalRefresh);
 });
