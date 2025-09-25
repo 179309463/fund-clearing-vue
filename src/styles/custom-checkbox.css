@@ -1,0 +1,26 @@
+/* 自定义复选框表头样式 */
+.custom-checkbox-header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+}
+
+.custom-checkbox-header .ag-header-cell-text {
+  display: none;
+}
+
+/* 确保复选框在表头中居中 */
+.ag-header-cell.custom-checkbox-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ag-header-cell.custom-checkbox-header .ag-header-cell-comp-wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
