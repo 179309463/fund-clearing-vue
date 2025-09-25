@@ -203,8 +203,16 @@ const onGlobalRefresh = () => {
 };
 
 onMounted(() => {
-  props.api.addEventListener('selectionChanged', onSelectionChanged);
-  props.api.addEventListener('modelUpdated', onModelUpdated);
+  console.log('CustomCheckboxHeaderRenderer mounted, API:', !!props.api);
+  
+  if (props.api && typeof props.api.addEventListener === 'function') {
+    props.api.addEventListener('selectionChanged', onSelectionChanged);
+    props.api.addEventListener('modelUpdated', onModelUpdated);
+    console.log('Header event listeners added successfully');
+  } else {
+    console.warn('CustomCheckboxHeaderRenderer: API not available or addEventListener not a function:', props.api);
+  }
+  
   window.addEventListener('refreshAllGrids', onGlobalRefresh);
 
   // 初始化状态
@@ -212,8 +220,16 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-  props.api.removeEventListener('selectionChanged', onSelectionChanged);
-  props.api.removeEventListener('modelUpdated', onModelUpdated);
+  console.log('CustomCheckboxHeaderRenderer unmounted');
+  
+  if (props.api && typeof props.api.removeEventListener === 'function') {
+    props.api.removeEventListener('selectionChanged', onSelectionChanged);
+    props.api.removeEventListener('modelUpdated', onModelUpdated);
+    console.log('Header event listeners removed successfully');
+  } else {
+    console.warn('CustomCheckboxHeaderRenderer: API not available for cleanup:', props.api);
+  }
+  
   window.removeEventListener('refreshAllGrids', onGlobalRefresh);
 });
 </script>
