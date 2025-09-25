@@ -14,13 +14,10 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, nextTick } from 'vue';
 import { fundData, NodeType } from '../data/fundData';
+import type { IHeaderParams } from 'ag-grid-community';
 
-interface Props {
-  api: any;
-  columnApi: any;
-}
-
-const props = defineProps<Props>();
+// AG Grid 会通过 params 传递所有参数
+const props = defineProps<IHeaderParams>();
 
 const checkboxRef = ref<HTMLInputElement | null>(null);
 const checkboxState = ref<'none' | 'some' | 'all'>('none');
@@ -181,7 +178,7 @@ const handleHeaderCheckboxChange = (event: Event) => {
     window.dispatchEvent(event);
 
     // 触发选择变化事件
-    if (props.api && props.api.dispatchEvent) {
+    if (props.api) {
       props.api.dispatchEvent({ type: 'selectionChanged' });
     }
   }, 10);
@@ -203,8 +200,11 @@ const onGlobalRefresh = () => {
 };
 
 onMounted(() => {
-  props.api.addEventListener('selectionChanged', onSelectionChanged);
-  props.api.addEventListener('modelUpdated', onModelUpdated);
+  // 检查 api 是否存在
+  if (props.api) {
+    props.api.addEventListener('selectionChanged', onSelectionChanged);
+    props.api.addEventListener('modelUpdated', onModelUpdated);
+  }
   window.addEventListener('refreshAllGrids', onGlobalRefresh);
 
   // 初始化状态
@@ -212,8 +212,10 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-  props.api.removeEventListener('selectionChanged', onSelectionChanged);
-  props.api.removeEventListener('modelUpdated', onModelUpdated);
+  if (props.api) {
+    props.api.removeEventListener('selectionChanged', onSelectionChanged);
+    props.api.removeEventListener('modelUpdated', onModelUpdated);
+  }
   window.removeEventListener('refreshAllGrids', onGlobalRefresh);
 });
 </script>

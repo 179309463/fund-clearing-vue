@@ -13,14 +13,10 @@
 <script setup lang="ts">
 import { ref, computed, nextTick, watch, onMounted, onUnmounted } from 'vue';
 import { NodeType } from '../data/fundData';
+import type { ICellRendererParams } from 'ag-grid-community';
 
-interface Props {
-  data: any;
-  api: any;
-  node: any;
-}
-
-const props = defineProps<Props>();
+// AG Grid 会通过 params 传递所有参数
+const props = defineProps<ICellRendererParams>();
 
 // 添加一个响应式状态来强制重新渲染
 const forceUpdateKey = ref(0);
@@ -162,7 +158,7 @@ const handleChange = (event: Event) => {
     forceUpdate();
 
     // 只刷新复选框列，不重绘整行
-    if (props.api && props.api.refreshCells) {
+    if (props.api) {
       props.api.refreshCells({
         columns: ['selected'],
         force: true
@@ -179,7 +175,7 @@ const handleChange = (event: Event) => {
       forceUpdate();
 
       // 触发选择变化事件
-      if (props.api && props.api.dispatchEvent) {
+      if (props.api) {
         props.api.dispatchEvent({ type: 'selectionChanged' });
       }
     }, 50);
