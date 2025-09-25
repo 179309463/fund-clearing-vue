@@ -58,16 +58,27 @@ const calculateGlobalSelectionState = () => {
                 selectedCount++;
               }
               if (transfer.children) {
-                transfer.children.forEach((tradeOrder: any) => {
+    
+    // 判断当前是否为半选状态 - 使用组件当前状态
+    const currentState = checkboxState.value;
+    const isFromIndeterminate = currentState === 'some';
+    
+    // 在半选状态下，点击应该变成全选；在其他状态下，按照正常逻辑
+    let isChecked: boolean;
+    if (isFromIndeterminate) {
+      // 半选状态点击 -> 全选
+      isChecked = true;
+    } else {
+      // 正常状态切换
+      isChecked = target.checked;
+    }
                   totalCount++;
-                  if (tradeOrder.selected) {
-                    selectedCount++;
-                  }
                 });
               }
             });
           }
         });
+      targetChecked: target.checked,
       }
     });
   };
