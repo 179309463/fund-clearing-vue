@@ -181,8 +181,11 @@ const handleHeaderCheckboxChange = (event: Event) => {
     window.dispatchEvent(event);
 
     // 触发选择变化事件
-    if (props.api && props.api.dispatchEvent) {
+    if (props.api && typeof props.api.dispatchEvent === 'function') {
       props.api.dispatchEvent({ type: 'selectionChanged' });
+      console.log('Header selection changed event dispatched');
+    } else {
+      console.warn('Header: API dispatchEvent not available');
     }
   }, 10);
 };
