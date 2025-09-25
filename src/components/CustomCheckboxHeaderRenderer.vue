@@ -12,7 +12,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted, onUnmounted, nextTick } from 'vue';
 import { fundData, NodeType } from '../data/fundData';
 
 interface Props {
@@ -172,13 +172,18 @@ const handleHeaderCheckboxChange = (event: Event) => {
   // 更新fundData中的所有数据
   cascadeSelection(fundData, isChecked, isFromIndeterminate);
 
+  // 立即更新状态
+  updateSelectionState();
+
   // 触发全局刷新事件，更新所有网格
   setTimeout(() => {
     const event = new CustomEvent('refreshAllGrids');
     window.dispatchEvent(event);
 
     // 触发选择变化事件
-    props.api.dispatchEvent({ type: 'selectionChanged' });
+    if (props.api && props.api.dispatchEvent) {
+      props.api.dispatchEvent({ type: 'selectionChanged' });
+    }
   }, 10);
 };
 

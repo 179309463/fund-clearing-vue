@@ -11,7 +11,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, nextTick, watch } from 'vue';
+import { ref, computed, nextTick, watch, onMounted, onUnmounted } from 'vue';
 import { NodeType } from '../data/fundData';
 
 interface Props {
@@ -22,6 +22,8 @@ interface Props {
 
 const props = defineProps<Props>();
 
+// 添加一个响应式状态来强制重新渲染
+const forceUpdateKey = ref(0);
 const checkboxRef = ref<HTMLInputElement | null>(null);
 
 const setCheckboxRef = (el: HTMLInputElement | null) => {
@@ -98,7 +100,7 @@ const cascadeSelection = (nodeData: any, selected: boolean, isFromIndeterminate:
 };
 
 // 计算复选框状态
-const checkboxState = computed(() => {
+const getCheckboxState = () => {
   if (!props.data) {
     return { checked: false, indeterminate: false };
   }
@@ -127,6 +129,13 @@ const checkboxState = computed(() => {
     // 部分成交单被选中
     return { checked: false, indeterminate: true };
   }
+};
+
+// 使用computed并依赖forceUpdateKey来强制重新计算
+const checkboxState = computed(() => {
+  // 依赖forceUpdateKey来触发重新计算
+  forceUpdateKey.value;
+  return getCheckboxState();
 });
 
 const handleChange = (event: Event) => {
@@ -149,11 +158,16 @@ const handleChange = (event: Event) => {
       cascadeSelection(props.data, newValue, isFromIndeterminate);
     }
 
-    // 精确刷新 - 只刷新复选框列，不影响展开状态
-    props.api.refreshCells({
-      columns: ['selected'],
-      force: true
-    });
+    // 立即强制重新渲染当前组件
+    forceUpdate();
+
+    // 只刷新复选框列，不重绘整行
+    if (props.api && props.api.refreshCells) {
+      props.api.refreshCells({
+        columns: ['selected'],
+        force: true
+      });
+    }
 
     // 延迟刷新以确保数据传播到子网格
     setTimeout(() => {
@@ -161,10 +175,33 @@ const handleChange = (event: Event) => {
       const event = new CustomEvent('refreshAllGrids');
       window.dispatchEvent(event);
 
+      // 再次强制重新渲染
+      forceUpdate();
+
       // 触发选择变化事件
-      props.api.dispatchEvent({ type: 'selectionChanged' });
+      if (props.api && props.api.dispatchEvent) {
+        props.api.dispatchEvent({ type: 'selectionChanged' });
+      }
     }, 50);
   }
+};
+
+// 强制更新函数
+const forceUpdate = () => {
+  forceUpdateKey.value++;
+};
+
+// 全局刷新事件处理
+const handleGlobalRefresh = () => {
+  console.log('CustomCheckboxRenderer: Global refresh triggered');
+  forceUpdate();
+  
+  nextTick(() => {
+    if (checkboxRef.value) {
+      const state = getCheckboxState();
+      checkboxRef.value.indeterminate = state.indeterminate;
+    }
+  });
 };
 
 // 监听复选框状态变化，更新indeterminate属性
@@ -175,6 +212,15 @@ watch(() => checkboxState.value.indeterminate, (newVal) => {
     }
   });
 }, { immediate: true });
+
+onMounted(() => {
+  // 监听全局刷新事件
+  window.addEventListener('refreshAllGrids', handleGlobalRefresh);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('refreshAllGrids', handleGlobalRefresh);
+});
 </script>
 
 <style scoped>
