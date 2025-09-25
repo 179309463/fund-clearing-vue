@@ -11,7 +11,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, nextTick } from 'vue';
+import { ref, computed, nextTick, watch } from 'vue';
 import { NodeType } from '../data/fundData';
 
 interface Props {
@@ -168,11 +168,13 @@ const handleChange = (event: Event) => {
 };
 
 // 监听复选框状态变化，更新indeterminate属性
-nextTick(() => {
-  if (checkboxRef.value) {
-    checkboxRef.value.indeterminate = checkboxState.value.indeterminate;
-  }
-});
+watch(() => checkboxState.value.indeterminate, (newVal) => {
+  nextTick(() => {
+    if (checkboxRef.value) {
+      checkboxRef.value.indeterminate = newVal;
+    }
+  });
+}, { immediate: true });
 </script>
 
 <style scoped>

@@ -51,8 +51,9 @@ export const getLevel3ColumnDefs = (): ColDef[] => [
     headerName: '划款进度',
     field: 'transferProgress',
     cellRenderer: StatusBadge,
-    cellRendererParams: {
+    cellRendererParams: (params: any) => ({
+      status: params.value,
       type: 'progress'
-    },
+    }),
   },
 ];

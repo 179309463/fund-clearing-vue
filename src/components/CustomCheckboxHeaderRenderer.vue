@@ -90,9 +90,11 @@ const updateSelectionState = () => {
   const newState = calculateGlobalSelectionState();
   checkboxState.value = newState;
   
-  if (checkboxRef.value) {
-    checkboxRef.value.indeterminate = newState === 'some';
-  }
+  nextTick(() => {
+    if (checkboxRef.value) {
+      checkboxRef.value.indeterminate = newState === 'some';
+    }
+  });
 };
 
 // 递归统计所有成交单的选择状态

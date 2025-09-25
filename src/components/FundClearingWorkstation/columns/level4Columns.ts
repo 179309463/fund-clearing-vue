@@ -45,25 +45,28 @@ export const getLevel4ColumnDefs = (): ColDef[] => [
     headerName: '指令状态',
     field: 'instructionStatus',
     cellRenderer: StatusBadge,
-    cellRendererParams: {
+    cellRendererParams: (params: any) => ({
+      status: params.value,
       type: 'instruction'
-    },
+    }),
   },
   {
     headerName: '有效状态',
     field: 'validStatus',
     cellRenderer: StatusBadge,
-    cellRendererParams: {
+    cellRendererParams: (params: any) => ({
+      status: params.value,
       type: 'valid'
-    },
+    }),
   },
   {
     headerName: '资金结算状态',
     field: 'fundSettlementStatus',
     cellRenderer: StatusBadge,
-    cellRendererParams: {
+    cellRendererParams: (params: any) => ({
+      status: params.value,
       type: 'settlement'
-    },
+    }),
   },
   {
     headerName: '交易类型',

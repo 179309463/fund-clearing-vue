@@ -45,43 +45,48 @@ export const getLevel2ColumnDefs = (): ColDef[] => [
     headerName: '自动清算状态',
     field: 'autoClearingStatus',
     cellRenderer: StatusBadge,
-    cellRendererParams: {
+    cellRendererParams: (params: any) => ({
+      status: params.value,
       type: 'clearing'
-    },
+    }),
     minWidth: 120,
   },
   {
     headerName: '划款申请状态',
     field: 'transferApplicationStatus',
     cellRenderer: StatusBadge,
-    cellRendererParams: {
+    cellRendererParams: (params: any) => ({
+      status: params.value,
       type: 'application'
-    },
+    }),
     minWidth: 120,
   },
   {
     headerName: '未办提醒',
     field: 'pendingReminder',
     cellRenderer: StatusBadge,
-    cellRendererParams: {
+    cellRendererParams: (params: any) => ({
+      status: params.value,
       type: 'reminder'
-    },
+    }),
   },
   {
     headerName: '核算进度',
     field: 'accountingProgress',
     cellRenderer: StatusBadge,
-    cellRendererParams: {
+    cellRendererParams: (params: any) => ({
+      status: params.value,
       type: 'progress'
-    },
+    }),
   },
   {
     headerName: '托管行进度',
     field: 'custodyProgress',
     cellRenderer: StatusBadge,
-    cellRendererParams: {
+    cellRendererParams: (params: any) => ({
+      status: params.value,
       type: 'progress'
-    },
+    }),
   },
   {
     headerName: '账户余额',
