@@ -1,46 +1,14 @@
 /* 移除所有AG Grid表格的圆角 */
 .ag-theme-balham {
   border-radius: 0 !important;
-  height: 100% !important;
-  width: 100% !important;
-  min-height: 0 !important;
 }
 
 .ag-theme-balham .ag-root-wrapper {
   border-radius: 0 !important;
-  height: 100% !important;
-  width: 100% !important;
-  min-height: 0 !important;
 }
 
 .ag-theme-balham .ag-root {
   border-radius: 0 !important;
-  height: 100% !important;
-  width: 100% !important;
-  min-height: 0 !important;
-}
-
-/* 确保AG Grid的视口容器有正确的高度 */
-.ag-theme-balham .ag-body-viewport {
-  height: 100% !important;
-  min-height: 0 !important;
-  overflow: auto !important;
-}
-
-/* 确保AG Grid的中心容器有正确的高度 */
-.ag-theme-balham .ag-center-cols-container {
-  min-height: 100% !important;
-}
-
-/* 确保AG Grid的滚动容器正常工作 */
-.ag-theme-balham .ag-body-horizontal-scroll-viewport {
-  overflow-x: auto !important;
-  overflow-y: hidden !important;
-}
-
-.ag-theme-balham .ag-body-vertical-scroll-viewport {
-  overflow-x: hidden !important;
-  overflow-y: auto !important;
 }
 .ag-theme-balham .ag-header {
   border-radius: 0 !important;

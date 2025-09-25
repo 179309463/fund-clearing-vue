@@ -7,8 +7,8 @@
     </div>
 
     <!-- Main Content -->
-    <div class="main-content" :style="{ paddingBottom: operationPanelHeight + 'px' }">
-      <div class="grid-container">
+    <div class="main-content">
+      <div class="grid-container" :style="{ paddingBottom: operationPanelHeight + 'px' }">
         <div class="ag-theme-balham grid-wrapper">
           <AgGridVue
             ref="gridRef"
@@ -372,14 +372,11 @@ onUnmounted(() => {
   background-color: white;
   flex: 1;
   min-height: 0;
-  overflow: auto;
 }
 
 .grid-wrapper {
   height: 100%;
   width: 100%;
-  min-height: 0;
-  position: relative;
 }
 
 .grid {

@@ -186,14 +186,11 @@ const operationButtons = [
   display: flex;
   align-items: center;
   justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 16px;
 }
 
 .selected-count {
   display: flex;
   align-items: center;
-  flex-shrink: 0;
 }
 
 .count-badge {
@@ -211,44 +208,11 @@ const operationButtons = [
   align-items: center;
   gap: 12px;
   flex-wrap: wrap;
-  justify-content: flex-end;
-  min-width: 0;
 }
 
 .operation-btn {
   font-size: 14px;
   height: 32px;
   padding: 0 16px;
-  flex-shrink: 0;
-}
-
-/* 响应式布局 */
-@media (max-width: 1200px) {
-  .buttons-container {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-  }
-  
-  .buttons-group {
-    width: 100%;
-    justify-content: flex-start;
-  }
-}
-
-@media (max-width: 768px) {
-  .operation-buttons {
-    padding: 12px 16px;
-  }
-  
-  .buttons-group {
-    gap: 8px;
-  }
-  
-  .operation-btn {
-    font-size: 13px;
-    height: 30px;
-    padding: 0 12px;
-  }
 }
 </style>
