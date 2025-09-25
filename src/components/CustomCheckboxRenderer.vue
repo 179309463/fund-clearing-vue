@@ -53,27 +53,47 @@ const getTradeOrderStats = (nodeData: any): { selectedCount: number; totalCount:
 
 // 递归设置所有子节点的选择状态
 const cascadeSelection = (nodeData: any, selected: boolean, isFromIndeterminate: boolean = false) => {
+  console.log('cascadeSelection called:', {
+    nodeId: nodeData.id,
+    selected,
+    isFromIndeterminate,
+    hasChildren: !!nodeData.children?.length
+  });
+  
   const traverse = (item: any) => {
+    console.log('Traversing item:', {
+      id: item.id,
+      nodeType: item.nodeType,
+      selected: item.selected,
+      instructionStatus: item.instructionStatus
+    });
+    
     if (item.nodeType === NodeType.TRADE_ORDER) {
       // 成交单节点
       if (selected) {
         if (isFromIndeterminate) {
           // 从半选状态切换到选中：选择所有成交单，不管状态
           item.selected = true;
+          console.log('Trade order selected (from indeterminate):', item.id);
         } else {
           // 从未选状态切换到选中：只选择未生成状态的成交单
           if (item.instructionStatus === '未生成') {
             item.selected = true;
+            console.log('Trade order selected (未生成):', item.id);
+          } else {
+            console.log('Trade order not selected (已生成):', item.id);
           }
           // 已生成的成交单保持原状态不变
         }
       } else {
         // 取消勾选时：取消所有成交单的选择（不管状态）
         item.selected = false;
+        console.log('Trade order deselected:', item.id);
       }
     } else {
       // 非成交单节点：先递归处理子节点，然后根据子节点状态决定自己的状态
       if (item.children && Array.isArray(item.children)) {
+        console.log('Processing children for:', item.id);
         item.children.forEach(traverse);
       }
 
@@ -82,16 +102,25 @@ const cascadeSelection = (nodeData: any, selected: boolean, isFromIndeterminate:
         // 勾选时：只有当有成交单被选中时，才选中自己
         const stats = getTradeOrderStats(item);
         item.selected = stats.selectedCount > 0;
+        console.log('Non-trade order node selection result:', {
+          id: item.id,
+          selected: item.selected,
+          stats
+        });
       } else {
         // 取消勾选时：直接取消选择
         item.selected = false;
+        console.log('Non-trade order node deselected:', item.id);
       }
     }
   };
 
   // 从当前节点的子节点开始遍历
   if (nodeData.children && Array.isArray(nodeData.children)) {
+    console.log('Starting cascade from children of:', nodeData.id);
     nodeData.children.forEach(traverse);
+  } else {
+    console.log('No children to cascade for:', nodeData.id);
   }
 };
 
@@ -137,6 +166,12 @@ const checkboxState = computed(() => {
 const handleChange = (event: Event) => {
   const target = event.target as HTMLInputElement;
   const newValue = target.checked;
+  
+  console.log('Checkbox change triggered:', {
+    nodeType: props.data?.nodeType,
+    newValue,
+    hasChildren: !!props.data?.children?.length
+  });
 
   if (props.data) {
     // 设置当前节点的状态
@@ -145,11 +180,17 @@ const handleChange = (event: Event) => {
     // 如果是第4层成交单，只设置自己，不处理子节点
     if (props.data.nodeType === NodeType.TRADE_ORDER) {
       // 成交单节点无需级联处理
+      console.log('Trade order node, no cascade needed');
     } else {
       // 对于第1/2/3层级，执行级联选择
       // 判断当前是否为半选状态
       const currentCheckboxState = checkboxState.value;
       const isFromIndeterminate = currentCheckboxState.indeterminate;
+      
+      console.log('Cascading selection:', {
+        isFromIndeterminate,
+        childrenCount: props.data.children?.length || 0
+      });
 
       cascadeSelection(props.data, newValue, isFromIndeterminate);
     }
@@ -158,15 +199,19 @@ const handleChange = (event: Event) => {
     forceUpdate();
 
     // 只刷新复选框列，不重绘整行
-    if (props.api) {
+    if (props.api && typeof props.api.refreshCells === 'function') {
+      console.log('Refreshing cells...');
       props.api.refreshCells({
         columns: ['selected'],
         force: true
       });
+    } else {
+      console.warn('API not available or refreshCells not a function');
     }
 
     // 延迟刷新以确保数据传播到子网格
     setTimeout(() => {
+      console.log('Triggering global refresh...');
       // 触发全局刷新事件
       const event = new CustomEvent('refreshAllGrids');
       window.dispatchEvent(event);
@@ -175,8 +220,10 @@ const handleChange = (event: Event) => {
       forceUpdate();
 
       // 触发选择变化事件
-      if (props.api) {
+      if (props.api && typeof props.api.dispatchEvent === 'function') {
         props.api.dispatchEvent({ type: 'selectionChanged' });
+      } else {
+        console.warn('API not available for dispatching selection change');
       }
     }, 50);
   }
