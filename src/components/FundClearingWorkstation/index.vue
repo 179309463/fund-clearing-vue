@@ -375,13 +375,17 @@ onUnmounted(() => {
   left: 0;
   right: 0;
   bottom: v-bind(operationPanelHeight + 'px');
+  overflow: hidden;
 }
 
 .grid-wrapper {
   height: 100%;
+  width: 100%;
+  position: relative;
 }
 
 .grid {
   height: 100%;
+  width: 100%;
 }
 </style>
