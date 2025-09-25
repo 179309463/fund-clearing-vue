@@ -322,11 +322,6 @@ onUnmounted(() => {
   background-color: white;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   border-bottom: 1px solid #f0f0f0;
-    
-    // 延迟更新选择统计
-    setTimeout(() => {
-      updateSelectionCounts();
-    }, 100);
   padding: 16px 24px;
 }
 
