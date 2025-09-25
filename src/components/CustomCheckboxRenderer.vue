@@ -11,23 +11,21 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, nextTick, watch, onMounted, onUnmounted } from 'vue';
+import { ref, computed, nextTick, watch, onMounted, onUnmounted, getCurrentInstance } from 'vue';
 import { NodeType } from '../data/fundData';
 
-// 在 Vue 3 的 AG Grid 中，需要手动定义 props
-const props = defineProps<{
-  data?: any;
-  value?: any;
-  api?: any;
-  node?: any;
-  colDef?: any;
-  column?: any;
-  rowIndex?: number;
-  getValue?: () => any;
-  setValue?: (value: any) => void;
-  formatValue?: (value: any) => any;
-  params?: any;
-}>();
+// 在 Vue 3 的 AG Grid 中，参数通过 getCurrentInstance 获取
+const instance = getCurrentInstance();
+const props = instance?.props as any;
+
+// 获取实际的数据
+const getData = () => {
+  return props?.params?.data || props?.data || props?.node?.data;
+};
+
+const getApi = () => {
+  return props?.params?.api || props?.api;
+};
 
 // 添加一个响应式状态来强制重新渲染
 const forceUpdateKey = ref(0);
@@ -137,21 +135,22 @@ const cascadeSelection = (nodeData: any, selected: boolean, isFromIndeterminate:
 
 // 计算复选框状态
 const getCheckboxState = () => {
-  if (!props.data) {
+  const data = getData();
+  if (!data) {
     return { checked: false, indeterminate: false };
   }
 
   // 第4层成交单：直接返回自己的选择状态
-  if (props.data.nodeType === NodeType.TRADE_ORDER) {
-    return { checked: props.data.selected || false, indeterminate: false };
+  if (data.nodeType === NodeType.TRADE_ORDER) {
+    return { checked: data.selected || false, indeterminate: false };
   }
 
   // 第1/2/3层：根据子节点中成交单的选择状态决定
-  const stats = getTradeOrderStats(props.data);
+  const stats = getTradeOrderStats(data);
 
   // 如果没有成交单，则根据自身状态决定
   if (stats.totalCount === 0) {
-    return { checked: props.data.selected || false, indeterminate: false };
+    return { checked: data.selected || false, indeterminate: false };
   }
 
   // 有成交单时，根据成交单的选择情况决定
@@ -177,21 +176,24 @@ const checkboxState = computed(() => {
 const handleChange = (event: Event) => {
   const target = event.target as HTMLInputElement;
   const newValue = target.checked;
+  const data = getData();
+  const api = getApi();
   
   console.log('Checkbox change triggered:', {
-    nodeType: props.data?.nodeType || 'undefined',
-    dataExists: !!props.data,
-    propsKeys: Object.keys(props),
+    nodeType: data?.nodeType || 'undefined',
+    dataExists: !!data,
+    propsKeys: Object.keys(props || {}),
     newValue,
-    hasChildren: !!props.data?.children?.length
+    hasChildren: !!data?.children?.length,
+    data: data
   });
 
-  if (props.data) {
+  if (data) {
     // 设置当前节点的状态
-    props.data.selected = newValue;
+    data.selected = newValue;
 
     // 如果是第4层成交单，只设置自己，不处理子节点
-    if (props.data.nodeType === NodeType.TRADE_ORDER) {
+    if (data.nodeType === NodeType.TRADE_ORDER) {
       // 成交单节点无需级联处理
       console.log('Trade order node, no cascade needed');
     } else {
@@ -202,24 +204,24 @@ const handleChange = (event: Event) => {
       
       console.log('Cascading selection:', {
         isFromIndeterminate,
-        childrenCount: props.data.children?.length || 0
+        childrenCount: data.children?.length || 0
       });
 
-      cascadeSelection(props.data, newValue, isFromIndeterminate);
+      cascadeSelection(data, newValue, isFromIndeterminate);
     }
 
     // 立即强制重新渲染当前组件
     forceUpdate();
 
     // 只刷新复选框列，不重绘整行
-    if (props.api && typeof props.api.refreshCells === 'function') {
+    if (api && typeof api.refreshCells === 'function') {
       console.log('Refreshing cells...');
-      props.api.refreshCells({
+      api.refreshCells({
         columns: ['selected'],
         force: true
       });
     } else {
-      console.warn('API not available or refreshCells not a function');
+      console.warn('API not available or refreshCells not a function', { api });
     }
 
     // 延迟刷新以确保数据传播到子网格
@@ -233,10 +235,10 @@ const handleChange = (event: Event) => {
       forceUpdate();
 
       // 触发选择变化事件
-      if (props.api && typeof props.api.dispatchEvent === 'function') {
-        props.api.dispatchEvent({ type: 'selectionChanged' });
+      if (api && typeof api.dispatchEvent === 'function') {
+        api.dispatchEvent({ type: 'selectionChanged' });
       } else {
-        console.warn('API not available for dispatching selection change');
+        console.warn('API not available for dispatching selection change', { api });
       }
     }, 50);
   }
