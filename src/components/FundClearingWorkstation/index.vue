@@ -214,6 +214,7 @@ const detailCellRendererParams = computed(() => ({
             detailRowAutoHeight: true,
             suppressCellFocus: true,
             onGridReady: (params: any) => {
+              console.log('Sub-grid level 4 ready, adding to instances:', params.api);
               gridInstances.value.add(params.api);
             },
             onSelectionChanged: updateSelectionCounts,
